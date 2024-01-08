@@ -3,9 +3,13 @@ import { useNavigate } from "react-router-dom";
 import type { RegisterFormData } from "../lib/definitions";
 import { signUp } from "../lib/action";
 import { useMutation } from "react-query";
+import { useAppContext } from "../context/AppContext";
+import { toast } from "sonner";
 
 const Signup = () => {
   const navigte = useNavigate();
+  // showToast from useAppContext
+  const { showToast } = useAppContext();
 
   // Validation form with useForm from react-hook-form
   const {
@@ -17,8 +21,15 @@ const Signup = () => {
 
   // useMutation hook to trigger signUp fn and handle success, error
   const mutation = useMutation(signUp, {
-    onSuccess: () => console.log("signup succesfully"),
-    onError: (errors: Error) => console.log(errors.message),
+    onSuccess: () => {
+      toast.success("Registration Success!");
+      showToast({ message: "Registration Success!", type: "SUCCESS" });
+    },
+
+    onError: (errors: Error) => {
+      toast.error(errors.message);
+      showToast({ message: errors.message, type: "ERROR" });
+    },
   });
 
   // trigger get user input
