@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import type { AppContext, MessageToast } from "../lib/definitions";
 import { Toaster } from "sonner";
+import { useQuery } from "react-query";
+import { validateToken } from "../lib/action";
 
 // TODO: create a customhook  useAppContext with a value
 //       of type AppContext
@@ -13,13 +15,20 @@ export const AppContextProvider = ({
   children: React.ReactNode;
 }) => {
   const [toast, setToast] = useState<MessageToast | undefined>(undefined);
-  console.log({ toast });
+  useEffect(() => {
+    console.log({ toast });
+  }, [toast, setToast]);
+
+  const { isError } = useQuery("validateToken", validateToken, {
+    retry: false,
+  });
   return (
     <AppContext.Provider
       value={{
         showToast: (messageToast) => {
           setToast(messageToast);
         },
+        isLoggedIn: !isError,
       }}
     >
       <Toaster richColors />

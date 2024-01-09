@@ -1,16 +1,6 @@
-import { Schema, Types, model } from "mongoose";
+import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
-
-export type UserType = {
-  username: string;
-  password: string;
-  email: string;
-  full_name: string | null;
-  phone_number: string | null;
-  date_of_birth: Date | null;
-  updated_at: Date;
-  created_at: Date;
-};
+import type { UserType } from "../shared/types";
 
 const userSchema = new Schema<UserType>({
   username: { type: String, required: true, unique: true },

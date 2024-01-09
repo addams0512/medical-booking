@@ -1,8 +1,13 @@
-export type RegisterFormData = {
+export type SignUpFormData = {
   username: string;
   password: string;
   email: string;
   confirmPassword: string;
+};
+
+export type LoginFormData = {
+  email: string;
+  password: string;
 };
 
 export type MessageToast = {
@@ -12,4 +17,5 @@ export type MessageToast = {
 
 export type AppContext = {
   showToast: (messageToast: MessageToast) => void;
+  isLoggedIn: boolean;
 };

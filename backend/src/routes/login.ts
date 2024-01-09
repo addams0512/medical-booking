@@ -4,6 +4,7 @@ import "dotenv/config";
 import jwt from "jsonwebtoken";
 import { validationResult, check, Result } from "express-validator";
 import bcrypt from "bcryptjs";
+import verifyToken from "../middleware/auth";
 
 // TODO:
 //  - Create a login route
@@ -41,6 +42,8 @@ router.post(
       if (!user) {
         return res.status(400).json({ message: "Invalid Credentials" });
       }
+
+      // Check passwordMatch
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
         return res.status(400).json({ message: "Invalid Credentials" });
@@ -67,5 +70,9 @@ router.post(
     }
   },
 );
+
+router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
+  return res.status(200).send({ userId: req.userId });
+});
 
 export default router;

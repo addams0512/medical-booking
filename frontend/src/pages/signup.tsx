@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import type { RegisterFormData } from "../lib/definitions";
+import type { SignUpFormData } from "../lib/definitions";
 import { signUp } from "../lib/action";
 import { useMutation } from "react-query";
 import { useAppContext } from "../context/AppContext";
@@ -17,13 +17,14 @@ const Signup = () => {
     watch,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormData>();
+  } = useForm<SignUpFormData>();
 
   // useMutation hook to trigger signUp fn and handle success, error
   const mutation = useMutation(signUp, {
     onSuccess: () => {
       toast.success("Registration Success!");
       showToast({ message: "Registration Success!", type: "SUCCESS" });
+      navigte("/");
     },
 
     onError: (errors: Error) => {
@@ -32,8 +33,8 @@ const Signup = () => {
     },
   });
 
-  // trigger get user input
-  const onSubmit: SubmitHandler<RegisterFormData> = (data) => {
+  // trigger form to get user input
+  const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
     mutation.mutate(data);
   };
 
