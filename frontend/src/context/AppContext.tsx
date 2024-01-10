@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import type { AppContext, MessageToast } from "../lib/definitions";
+import React, { createContext, useContext } from "react";
+import type { AppContext } from "../lib/definitions";
 import { Toaster } from "sonner";
 import { useQuery } from "react-query";
 import { validateToken } from "../lib/action";
@@ -14,20 +14,13 @@ export const AppContextProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [toast, setToast] = useState<MessageToast | undefined>(undefined);
-  useEffect(() => {
-    console.log({ toast });
-  }, [toast, setToast]);
-
   const { isError } = useQuery("validateToken", validateToken, {
     retry: false,
   });
+
   return (
     <AppContext.Provider
       value={{
-        showToast: (messageToast) => {
-          setToast(messageToast);
-        },
         isLoggedIn: !isError,
       }}
     >

@@ -4,10 +4,11 @@ import { LoginFormData } from "../lib/definitions";
 import { useMutation } from "react-query";
 import { logIn } from "../lib/action";
 import { toast } from "sonner";
-import { useAppContext } from "../context/AppContext";
+import { useQueryClient } from "react-query";
+
 const Login = () => {
   const navigate = useNavigate();
-  const { showToast } = useAppContext();
+  const queryClient = useQueryClient();
   // Validation form with useForm
   const {
     register,
@@ -17,13 +18,13 @@ const Login = () => {
 
   // useMutation hook to trigger signUp fn and handle success, error
   const mutation = useMutation(logIn, {
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries("auth_token");
       toast.success("Login successfully");
-      showToast({ message: "Login Successfully!", type: "SUCCESS" });
+      navigate("/services");
     },
     onError: (errors: Error) => {
       toast.error(errors.message);
-      showToast({ message: errors.message, type: "ERROR" });
     },
   });
 

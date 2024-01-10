@@ -3,14 +3,13 @@ import { useNavigate } from "react-router-dom";
 import type { SignUpFormData } from "../lib/definitions";
 import { signUp } from "../lib/action";
 import { useMutation } from "react-query";
-import { useAppContext } from "../context/AppContext";
 import { toast } from "sonner";
+import { useQueryClient } from "react-query";
 
 const Signup = () => {
   const navigte = useNavigate();
-  // showToast from useAppContext
-  const { showToast } = useAppContext();
 
+  const queryClient = useQueryClient();
   // Validation form with useForm from react-hook-form
   const {
     register,
@@ -21,15 +20,14 @@ const Signup = () => {
 
   // useMutation hook to trigger signUp fn and handle success, error
   const mutation = useMutation(signUp, {
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries("auth_token");
       toast.success("Registration Success!");
-      showToast({ message: "Registration Success!", type: "SUCCESS" });
       navigte("/");
     },
 
     onError: (errors: Error) => {
       toast.error(errors.message);
-      showToast({ message: errors.message, type: "ERROR" });
     },
   });
 

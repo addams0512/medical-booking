@@ -1,7 +1,5 @@
-import React from "react";
-
 const ServicesPage = () => {
-  return <div>ServicesPage</div>;
+  return <div className="w-full h-full flex flex-grow">ServicesPage</div>;
 };
 
 export default ServicesPage;

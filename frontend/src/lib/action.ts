@@ -41,6 +41,16 @@ export async function logIn(formData: LoginFormData) {
   console.log({ logInData });
 }
 
+export async function logOut() {
+  const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error during log out");
+  }
+}
+
 export async function validateToken() {
   const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
     credentials: "include",

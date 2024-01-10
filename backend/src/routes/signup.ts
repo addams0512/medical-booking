@@ -53,7 +53,7 @@ router.post(
       );
 
       // Save cookie
-      res.cookie("auth-token", token, {
+      res.cookie("auth_token", token, {
         maxAge: 900000, // 15 minutes
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
