@@ -13,8 +13,8 @@ const Header = () => {
   const queryClient = useQueryClient();
   const mutation = useMutation(logOut, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries("auth_token");
       toast.success("Log Out!");
+      await queryClient.invalidateQueries("validateToken");
       navigate("/");
     },
     onError: (errors: Error) => {
@@ -40,7 +40,7 @@ const Header = () => {
           <Link to="/about">About</Link>
         </div>
       </div>
-      {isLoggedIn && (
+      {isLoggedIn ? (
         <button
           onClick={handleClick}
           className="flex items-center justify-center mx-6 h-full"
@@ -49,6 +49,8 @@ const Header = () => {
             <GiExitDoor />
           </div>
         </button>
+      ) : (
+        <div className="w-[92px] h-full"></div>
       )}
     </div>
   );

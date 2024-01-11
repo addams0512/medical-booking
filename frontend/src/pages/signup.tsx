@@ -21,8 +21,8 @@ const Signup = () => {
   // useMutation hook to trigger signUp fn and handle success, error
   const mutation = useMutation(signUp, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries("auth_token");
       toast.success("Registration Success!");
+      await queryClient.invalidateQueries("validateToken");
       navigte("/");
     },
 
