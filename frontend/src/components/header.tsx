@@ -42,12 +42,14 @@ const Header = () => {
       </div>
       {isLoggedIn ? (
         <button
+          name="Logout"
           onClick={handleClick}
-          className="flex items-center justify-center mx-6 h-full"
+          className="flex items-center justify-center mx-6 h-full space-x-2"
         >
           <div className="rounded-full h-[50px] w-[50px] bg-[#C7FFED] text-[#9C7178] text-3xl flex items-center justify-center shadow-md cursor-pointer">
             <GiExitDoor />
           </div>
+          <span className="text-[#9C7178] text-xl">Logout</span>
         </button>
       ) : (
         <div className="w-[92px] h-full"></div>
