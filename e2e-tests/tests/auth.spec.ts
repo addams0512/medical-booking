@@ -7,7 +7,7 @@ import { test, expect } from "@playwright/test";
 //  - exprect "Log in succesfully"
 //  - expect "Sign out button visible"
 
-const URL_FRONTEND = "http://localhost:5173/";
+const URL_FRONTEND = "http://localhost:5173";
 
 test("Should allow user to login", async ({ page }) => {
   await page.goto(URL_FRONTEND);
@@ -17,8 +17,8 @@ test("Should allow user to login", async ({ page }) => {
   // expect Login button visible
   await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
 
-  //  - fill email password
-  await page.locator("[name=email]").fill("quangminh0512@icloud.com");
+  // fill email password
+  await page.locator("[name=email]").fill("minh123@gmail.com");
   await page.locator("[name=password]").fill("minh123");
 
   // click button login
@@ -29,21 +29,27 @@ test("Should allow user to login", async ({ page }) => {
   await expect(page.getByRole("button", { name: "Logout" })).toBeVisible();
 });
 
-test("has title", async ({ page }) => {
-  await page.goto("https://playwright.dev/");
+test("Should allow user to register", async ({ page }) => {
+  await page.goto(URL_FRONTEND);
 
-  // Expect a title "to contain" a substring.
-  await expect(page).toHaveTitle(/Playwright/);
-});
+  // click button Signup
+  await page.getByRole("link", { name: "Sign up" }).click();
 
-test("get started link", async ({ page }) => {
-  await page.goto("https://playwright.dev/");
+  // expect Sign up button visible
+  await expect(page.getByRole("button", { name: "Sign Up" })).toBeVisible();
 
-  // Click the get started link.
-  await page.getByRole("link", { name: "Get started" }).click();
+  //fill field
+  await page.locator("[name=username]").fill("minhminh0512");
+  await page.locator("[name=email]").fill("minh123@gmail.com");
+  await page.locator("[name=password]").fill("minh123");
+  await page.locator("[name=confirmPassword]").fill("minh123");
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(
-    page.getByRole("heading", { name: "Installation" }),
-  ).toBeVisible();
+  // click Sign Up button
+  await page.getByRole("button", { name: "Sign Up" }).click();
+
+  // expect Sign up succesfully
+  await expect(page.getByText("Registration Success!")).toBeVisible();
+
+  // expect navigate to login form
+  await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
 });

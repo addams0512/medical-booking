@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import type { SignUpFormData } from "../lib/definitions";
 import { signUp } from "../lib/action";
 import { useMutation } from "react-query";
@@ -41,14 +41,14 @@ const Signup = () => {
       <div className="w-[340px] h-[600px] flex flex-col items-center justify-center bg-[#C7FFED] shadow-md rounded-md">
         <div className="flex text-3xl text-[#9C7178] items-center justify-center space-x-6  w-full px-4 font-roboto ">
           <div className="flex flex-col items-center w-full cursor-pointer">
-            <button onClick={() => navigte("/")} className="mb-2">
+            <Link className="mb-2" to="/">
               Log in
-            </button>
+            </Link>
           </div>
           <div className="flex flex-col items-center w-full cursor-pointer">
-            <button onClick={() => navigte("/sign-up")} className="mb-2">
+            <Link className="mb-2" to="/sign-up">
               Sign up
-            </button>
+            </Link>
             <div className="border-[#9C7178] border-[1px] w-[50px]"></div>
           </div>
         </div>
