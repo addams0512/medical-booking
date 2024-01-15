@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import signupRoutes from "./routes/signup";
 import loginRoutes from "./routes/login";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 // connect to db
 mongoose.connect(process.env.MONGODB_CONNECTION_STRING as string);
@@ -15,6 +16,9 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL }));
+
+// connect back-end to front-end
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 // router for signup /api/users/signup
 app.use("/api/users", signupRoutes);
