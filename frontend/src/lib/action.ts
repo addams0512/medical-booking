@@ -1,6 +1,8 @@
 import type { LoginFormData, SignUpFormData } from "./definitions";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://medical-booking-hc2f.onrender.com";
 
 // Sign up function to authenticate to backend
 export async function signUp(formData: SignUpFormData) {
