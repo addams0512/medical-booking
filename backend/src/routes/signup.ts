@@ -1,8 +1,8 @@
 import express, { Request, Response } from "express";
-import User from "../models/user";
+import { User, Doctor } from "../models/user";
 import "dotenv/config";
-import jwt from "jsonwebtoken";
 import { validationResult, check, Result } from "express-validator";
+import { checkRole, verifyToken } from "../middleware/auth";
 
 // TODO: - Tạo route /register call back async function
 //    in the function try catch block catch error and return status 500.
@@ -14,6 +14,36 @@ import { validationResult, check, Result } from "express-validator";
 
 const router = express.Router();
 
+type UserRole = "doctor" | "patient" | "admin";
+
+export const validateRole = (value: UserRole) => {
+  if (!["doctor", "patient", "admin"].includes(value)) {
+    throw new Error("Invalid role");
+  }
+  return true;
+};
+
+// route: /api/user/me
+router.get(
+  "/me",
+  verifyToken,
+  checkRole,
+  async (req: Request, res: Response) => {
+    const userId = req.body;
+    try {
+      const user = User.findById(userId).select("-password");
+      if (!user) {
+        return res.status(400).json({ message: "User not found" });
+      }
+
+      res.json(user);
+    } catch (error) {
+      console.log({ error });
+      res.status(500).json({ message: "Something went wrong" });
+    }
+  },
+);
+
 // route: /api/user/signup
 router.post(
   "/signup",
@@ -23,6 +53,7 @@ router.post(
       min: 6,
     }),
     check("email", "Email is required").isString(),
+    check("role", "Role is required").custom(validateRole),
   ],
   async (req: Request, res: Response) => {
     // validation field and return array of error(result)
@@ -36,28 +67,24 @@ router.post(
       let user = await User.findOne({
         email: req.body.email,
       });
-      if (user) {
+      let doctor = await Doctor.findOne({
+        email: req.body.email,
+      });
+      if (user || doctor) {
         res.status(400).json({ message: "User is already existed" });
       }
 
-      // Create and save user to db
-      user = new User(req.body);
-      await user.save();
+      // Create and save user or to db
+      if (req.body.role === "doctor") {
+        doctor = new Doctor(req.body);
+        await doctor.save();
+      } else {
+        user = new User(req.body);
+        await user.save();
+      }
+
       console.log({ user });
-
-      // Sign jwt
-      const token = jwt.sign(
-        { userId: user.id },
-        process.env.JWT_SECRET_KEY as string,
-        { expiresIn: "1d" },
-      );
-
-      // Save cookie
-      res.cookie("auth_token", token, {
-        maxAge: 900000, // 15 minutes
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-      });
+      console.log({ doctor });
 
       // return status ok
       res.status(200).send({ message: "User registered ok" });

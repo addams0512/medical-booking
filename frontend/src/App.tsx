@@ -1,11 +1,12 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Layout from "./layouts/Layout";
+import PatientLayout from "./layouts/PatientLayout";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
 import ServicesPage from "./pages/services";
-import ResoucesPage from "./pages/resources";
-import NewsPage from "./pages/news";
-import AboutPage from "./pages/about";
+import HomePage from "./pages/homepage";
+import DoctorLayout from "./layouts/DoctorLayout";
+import AdminLayout from "./layouts/AdminLayout";
+import DoctorPage from "./pages/doctorpage";
 
 function App() {
   return (
@@ -14,49 +15,49 @@ function App() {
         <Route
           path="/"
           element={
-            <Layout>
+            <PatientLayout>
+              <HomePage />
+            </PatientLayout>
+          }
+        />
+        <Route
+          path="/log-in"
+          element={
+            <PatientLayout>
               <Login />
-            </Layout>
+            </PatientLayout>
           }
         />
         <Route
           path="/sign-up"
           element={
-            <Layout>
+            <PatientLayout>
               <Signup />
-            </Layout>
+            </PatientLayout>
           }
         />
         <Route
-          path="/services"
+          path="/doctor-page"
           element={
-            <Layout>
+            <DoctorLayout>
+              <DoctorPage />
+            </DoctorLayout>
+          }
+        />
+        <Route
+          path="/patient-page"
+          element={
+            <PatientLayout>
               <ServicesPage />
-            </Layout>
+            </PatientLayout>
           }
         />
         <Route
-          path="/resources"
+          path="/admin-page"
           element={
-            <Layout>
-              <ResoucesPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/news"
-          element={
-            <Layout>
-              <NewsPage />
-            </Layout>
-          }
-        />
-        <Route
-          path="/about"
-          element={
-            <Layout>
-              <AboutPage />
-            </Layout>
+            <AdminLayout>
+              <ServicesPage />
+            </AdminLayout>
           }
         />
       </Routes>

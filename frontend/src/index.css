@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.dropdownProfile {
+  z-index: 9999;
+  position: absolute;
+  top: 4.5rem;
+  right: 2rem;
+  width: 180px;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.dropdownProfile::before {
+  content: "";
+  position: absolute;
+  top: -0.8rem;
+  right: 2.7rem;
+  width: 20px;
+  height: 40px;
+  transform: rotate(45deg);
+  background-color: white;
+}

@@ -1,6 +1,17 @@
-import type { LoginFormData, SignUpFormData } from "./definitions";
+import type { LoginFormData, SignUpFormData, UserType } from "./definitions";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+
+// Fetch current user
+export const fetchCurrentUser = async (): Promise<UserType> => {
+  const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Error fetching user");
+  }
+  return response.json();
+};
 
 // Sign up function to authenticate to backend
 export async function signUp(formData: SignUpFormData) {
@@ -20,8 +31,10 @@ export async function signUp(formData: SignUpFormData) {
   }
 
   console.log({ signUpData });
+  return signUpData;
 }
 
+// Log in function
 export async function logIn(formData: LoginFormData) {
   const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
     method: "POST",
@@ -39,6 +52,7 @@ export async function logIn(formData: LoginFormData) {
   }
 
   console.log({ logInData });
+  return logInData;
 }
 
 export async function logOut() {

@@ -1,19 +1,35 @@
+export type UserRole = "patient" | "doctor" | "admin";
+
 // extend type for Request
 declare global {
   namespace Express {
     interface Request {
       userId: string;
+      role: UserRole;
     }
   }
 }
 
-export type UserType = {
+export interface CommonUserFields {
   username: string;
-  password: string;
   email: string;
-  full_name: string | null;
-  phone_number: string | null;
+  password: string;
+  full_name: string;
+  role: "doctor" | "patient" | "admin";
+  phone: string | null;
   date_of_birth: Date | null;
-  updated_at: Date;
-  created_at: Date;
-};
+  address: string | null;
+}
+
+export interface DoctorFields {
+  address: string | null;
+  price: string | null;
+  description: string | null;
+  logo: string | null;
+  image: string | null;
+  open_closed_time: string | null;
+  date_of_birth: Date | null;
+  category: "GP" | "Dentist" | "Orthopedic" | "Oncologist" | "Cardiologist";
+}
+
+export interface UserType extends CommonUserFields, DoctorFields {}

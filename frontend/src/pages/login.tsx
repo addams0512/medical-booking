@@ -1,62 +1,56 @@
-import { SubmitHandler, useForm } from "react-hook-form";
-import { useNavigate, Link } from "react-router-dom";
+import { type SubmitHandler, useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import { LoginFormData } from "../lib/definitions";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { logIn } from "../lib/action";
 import { toast } from "sonner";
-import { useQueryClient } from "react-query";
 
 const Login = () => {
-  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  // Validation form with useForm
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>();
+  } = useForm<LoginFormData>({ defaultValues: { role: "patient" } });
 
-  // useMutation hook to trigger signUp fn and handle success, error
   const mutation = useMutation(logIn, {
-    onSuccess: async () => {
+    onSuccess: async (loginData) => {
+      const { role } = loginData;
+
       toast.success("Login successfully");
       await queryClient.invalidateQueries("validateToken");
-      navigate("/services");
+
+      if (role === "doctor") {
+        navigate("/doctor-page");
+      } else if (role === "patient") {
+        navigate("/patient-page");
+      } else {
+        navigate("/admin-page");
+      }
     },
     onError: (errors: Error) => {
       toast.error(errors.message);
     },
   });
 
-  // trigger form to get user input
   const onSubmit: SubmitHandler<LoginFormData> = (data) => {
     mutation.mutate(data);
   };
+
   return (
-    <div className="w-full h-full flex flex-grow items-center justify-center border-t-2 border-[#BBC8CA]">
-      <div className="w-[300px] h-[450px] flex flex-col items-center justify-center bg-[#C7FFED] shadow-md rounded-md">
-        <div className="flex text-3xl text-[#9C7178] items-center justify-center space-x-6  w-full px-4 font-roboto">
-          <div className="flex flex-col items-center w-full cursor-pointer">
-            <Link className="mb-2" to="/">
-              Log in
-            </Link>
-            <div className="border-[#9C7178] border-[1px] w-[50px]"></div>
-          </div>
-          <div className="flex flex-col items-center w-full cursor-pointer">
-            <Link className="mb-2" to="/sign-up">
-              Sign up
-            </Link>
-          </div>
-        </div>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col space-y-8 w-full my-8 px-9 font-poppins items-center"
-        >
-          <label className="flex flex-col w-full text-bold text-md text-[#9C7178]">
+    <div className="flex flex-grow w-full h-full items-center justify-center">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="w-[400px] h-fixed flex flex-col bg-white py-[40px] px-[40px] items-center gap-6 rounded-xl shadow-md"
+      >
+        <div className="text-3xl">Welcome back!</div>
+        <div className="flex flex-col w-full gap-6 justify-between items-center">
+          <label className="flex flex-col w-full h-fixed gap-4 text-xl">
             Email:
             <input
               type="text"
-              className="border-b-[#BBC8CA] border-b-2 italic text-[#BBC8CA] outline-none bg-transparent"
+              className="py-2 px-2 h-[40px] flex items-center justify-start w-full border-none outline-none bg-[#f6f6f6] rounded-md shadow-md"
               {...register("email", { required: "This field is required" })}
             />
             {errors.email && (
@@ -65,11 +59,11 @@ const Login = () => {
               </span>
             )}
           </label>
-          <label className="flex flex-col w-full text-bold text-md text-[#9C7178]">
+          <label className="flex flex-col w-full h-fixed gap-4 text-xl">
             Password:
             <input
               type="password"
-              className="w-full border-b-[#BBC8CA] border-b-2 italic text-[#BBC8CA] outline-none bg-transparent"
+              className="py-2 px-2 h-[40px] flex items-center justify-start w-full border-none outline-none bg-[#f6f6f6] rounded-md shadow-md"
               {...register("password", {
                 required: "This field is required",
                 minLength: {
@@ -84,11 +78,46 @@ const Login = () => {
               </span>
             )}
           </label>
-          <button className="w-[120px] border-2 px-6 py-2 rounded-md border-[#9C7178] text-[#9C7178] hover:bg-[#9C7178] hover:text-[#C7FFED] transition duration-200">
+        </div>
+        <div className="flex gap-6 justify-center items-center w-full h-full text-md">
+          <div className="flex gap-2 items-center justify-center">
+            <input
+              type="radio"
+              value="patient"
+              {...register("role", { required: "Please select your role" })}
+            />{" "}
+            <span>Patient</span>
+          </div>
+          <div className="flex gap-2 items-center justify-center">
+            <input
+              type="radio"
+              value="doctor"
+              {...register("role", { required: "Please select your role" })}
+            />{" "}
+            <span>Doctor</span>
+          </div>
+          <div className="flex gap-2 items-center justify-center">
+            <input
+              type="radio"
+              value="admin"
+              {...register("role", { required: "Please select your role" })}
+            />{" "}
+            <span>Admin</span>
+          </div>
+        </div>
+
+        <div className="w-full flex flex-col flex-grow items-center justify-center gap-4">
+          <p className="text-sm">
+            Don't have an account?{" "}
+            <i className="text-[#7BB18E] cursor-pointer">
+              <Link to="/sign-up">Sign up today!</Link>
+            </i>
+          </p>
+          <button className="w-[200px] h-[40px] bg-[#7BB18E] bg-opacity-60 rounded-md text-xl font-regular">
             Login
           </button>
-        </form>
-      </div>
+        </div>
+      </form>
     </div>
   );
 };
