@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
-import { User, Doctor } from "../models/user";
+import { User } from "../models/user";
 import "dotenv/config";
 import jwt from "jsonwebtoken";
 import { validationResult, check, Result } from "express-validator";
 import bcrypt from "bcryptjs";
-import { checkRole, verifyToken } from "../middleware/auth";
+import { verifyToken } from "../middleware/auth";
 import { validateRole } from "./signup";
 
 // TODO:
@@ -80,14 +80,9 @@ router.post(
   },
 );
 
-router.get(
-  "/validate-token",
-  verifyToken,
-  checkRole,
-  (req: Request, res: Response) => {
-    return res.status(200).send({ userId: req.userId, role: req.role });
-  },
-);
+router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
+  return res.status(200).send({ userId: req.userId, role: req.role });
+});
 
 router.post("/logout", (req: Request, res: Response) => {
   res.cookie("auth_token", "", {

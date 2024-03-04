@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import { User, Doctor } from "../models/user";
 import "dotenv/config";
 import { validationResult, check, Result } from "express-validator";
-import { checkRole, verifyToken } from "../middleware/auth";
+import { verifyToken } from "../middleware/auth";
 
 // TODO: - Tạo route /register call back async function
 //    in the function try catch block catch error and return status 500.
@@ -24,25 +24,21 @@ export const validateRole = (value: UserRole) => {
 };
 
 // route: /api/user/me
-router.get(
-  "/me",
-  verifyToken,
-  checkRole,
-  async (req: Request, res: Response) => {
-    const userId = req.body;
-    try {
-      const user = User.findById(userId).select("-password");
-      if (!user) {
-        return res.status(400).json({ message: "User not found" });
-      }
-
-      res.json(user);
-    } catch (error) {
-      console.log({ error });
-      res.status(500).json({ message: "Something went wrong" });
+router.get("/me", verifyToken, async (req: Request, res: Response) => {
+  const userId = req.userId;
+  console.log({ userId });
+  try {
+    const user = await User.findById(userId).select("-password");
+    console.log({ user });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
     }
-  },
-);
+    return res.json(user);
+  } catch (error) {
+    console.log({ error });
+    res.status(500).json({ message: "Something went wrong" });
+  }
+});
 
 // route: /api/user/signup
 router.post(

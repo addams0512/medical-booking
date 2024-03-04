@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { User } from "../models/user";
-import { UserRole } from "../shared/types";
+
 // TODO:
 // verifyToken:
 //  - get token by request to frontend
@@ -27,21 +26,3 @@ export const verifyToken = (
     return res.status(401).json({ message: "unauthorized" });
   }
 };
-
-export const checkRole =
-  (roles: UserRole) =>
-  async (req: Request, res: Response, next: NextFunction) => {
-    const { email } = req.body;
-    const user = await User.findOne({ email });
-    if (!user?.role) {
-      return res.status(401).json("User role not found. Access denied.");
-    }
-
-    if (!roles.includes(user.role)) {
-      return res
-        .status(401)
-        .json("Sorry, you do not have access to this route");
-    }
-
-    next();
-  };
