@@ -8,16 +8,18 @@ import { IoNotificationsOutline } from "react-icons/io5";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdLogout } from "react-icons/md";
 import { RxAvatar } from "react-icons/rx";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { logOut } from "../lib/action";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { fetchCurrentUser } from "../lib/action";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const DoctorLayout = ({ children }: Props) => {
+  const { data: currentUser } = useQuery("fetchCurrentUser", fetchCurrentUser);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const mutation = useMutation(logOut, {
@@ -84,8 +86,8 @@ const DoctorLayout = ({ children }: Props) => {
           <div className="flex gap-3 text-[40px] items-center justify-end">
             <RxAvatar />
             <div className="flex flex-col">
-              <p className="text-base text-black">Jude Bellingham</p>
-              <p className="text-sm text-[#808080]">Dentist</p>
+              <p className="text-base text-black">{currentUser?.username}</p>
+              <p className="text-sm text-[#808080]">{currentUser?.category}</p>
             </div>
           </div>
           {children}

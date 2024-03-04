@@ -10,6 +10,7 @@ export type UserType = {
   updated_at: Date;
   created_at: Date;
   role: "doctor" | "patient" | "admin";
+  category: "GP" | "Dentist" | "Orthopedic" | "Oncologist" | "Cardiologist";
 };
 
 export type SignUpFormData = {

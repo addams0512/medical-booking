@@ -5,12 +5,14 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 // Fetch current user
 export const fetchCurrentUser = async (): Promise<UserType> => {
   const response = await fetch(`${API_BASE_URL}/api/users/me`, {
+    method: "GET",
     credentials: "include",
   });
   if (!response.ok) {
     throw new Error("Error fetching user");
   }
-  return response.json();
+  const user = await response.json();
+  return user;
 };
 
 // Sign up function to authenticate to backend

@@ -19,19 +19,10 @@ const Signup = () => {
 
   // useMutation hook to trigger signUp fn and handle success, error
   const mutation = useMutation(signUp, {
-    onSuccess: async (signUpData) => {
-      const { role } = signUpData;
-
+    onSuccess: async () => {
       toast.success("Registration Success!");
       await queryClient.invalidateQueries("validateToken");
-
-      if (role === "doctor") {
-        navigate("/doctor-page");
-      } else if (role === "patient") {
-        navigate("/patient-page");
-      } else {
-        navigate("/admin-page");
-      }
+      navigate("/log-in");
     },
 
     onError: (errors: Error) => {

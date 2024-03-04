@@ -17,7 +17,6 @@ const Login = () => {
   const mutation = useMutation(logIn, {
     onSuccess: async (loginData) => {
       const { role } = loginData;
-
       toast.success("Login successfully");
       await queryClient.invalidateQueries("validateToken");
 
